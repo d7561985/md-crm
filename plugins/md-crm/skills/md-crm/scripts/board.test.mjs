@@ -15,11 +15,19 @@ import { fileURLToPath } from 'node:url'
 import { tmpdir } from 'node:os'
 
 const SCRIPT = join(dirname(fileURLToPath(import.meta.url)), 'board.mjs')
+// The vocabulary is read from the script's own CONFIG block, so the suite survives an
+// init that renamed stages/balls or translated them into another language.
+const SRC = readFileSync(SCRIPT, 'utf8')
+const arr = (name) =>
+  SRC.match(new RegExp(`const ${name} = \\[(.*?)\\]`, 's'))[1]
+    .split(',').map((s) => s.trim().replace(/^'|'$/g, '')).filter(Boolean)
+const STAGES = arr('STAGES')
+const BALLS = arr('BALLS')
 const TODAY = new Date().toISOString().slice(0, 10)
 const CARD_OK = `---
 name: Test Person
-stage: found
-ball: ours
+stage: ${STAGES[0]}
+ball: ${BALLS[0]}
 last_touch: ${TODAY}
 next_action: research their profile
 ---
@@ -137,15 +145,15 @@ test('garbage next_url → exit 1', () => {
 // ── the touch-log guard ─────────────────────────────────────────────────────────────────
 
 test('stage beyond first without a touch log → exit 1', () => {
-  const r = run({ 'bad.md': CARD_OK.replace('stage: found', 'stage: contacted').replace(/## Touch log[\s\S]*$/, '') })
+  const r = run({ 'bad.md': CARD_OK.replace(`stage: ${STAGES[0]}`, `stage: ${STAGES[1]}`).replace(/## Touch log[\s\S]*$/, '') })
   assert.equal(r.code, 1)
   assert.match(r.out, /Touch log/)
 })
 
 test('stage beyond first with a filled touch log → exit 0', () => {
   const r = run({
-    'ok.md': CARD_OK.replace('stage: found', 'stage: contacted')
-      .replace('ball: ours', 'ball: theirs')
+    'ok.md': CARD_OK.replace(`stage: ${STAGES[0]}`, `stage: ${STAGES[1]}`)
+      .replace(`ball: ${BALLS[0]}`, `ball: ${BALLS[1]}`)
       .replace(/## Touch log[\s\S]*$/, TOUCHLOG_FILLED),
   })
   assert.equal(r.code, 0)
@@ -168,7 +176,8 @@ test('overdue our move gets 🔴 (our debt burns faster: 2 days, not 5)', () => 
 
 function patchedScript() {
   const dir = mkdtempSync(join(tmpdir(), 'mdcrm-hyp-'))
-  const patched = readFileSync(SCRIPT, 'utf8').replace('const HYP = {}', "const HYP = { h1: 'test hypothesis' }")
+  // Replace whatever HYP the user configured — the suite brings its own hypothesis.
+  const patched = SRC.replace(/const HYP = \{[\s\S]*?\}/, "const HYP = { h1: 'test hypothesis' }")
   const p = join(dir, 'board.mjs')
   writeFileSync(p, patched)
   return p
@@ -199,7 +208,10 @@ test('asked and said → 1/1 confirmed', () => {
 })
 
 test('empty HYP keeps the hypothesis section silent', () => {
-  const r = run({ 'ok.md': CARD_OK })
+  const dir = mkdtempSync(join(tmpdir(), 'mdcrm-nohyp-'))
+  const p = join(dir, 'board.mjs')
+  writeFileSync(p, SRC.replace(/const HYP = \{[\s\S]*?\}/, 'const HYP = {}'))
+  const r = run({ 'ok.md': CARD_OK }, { script: p })
   assert.doesNotMatch(r.out, /Product hypotheses/)
 })
 
