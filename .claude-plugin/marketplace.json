@@ -1,0 +1,11 @@
+{
+  "name": "md-crm",
+  "owner": { "name": "Dzmitry Harupa", "email": "dzmitry@harupa.pro" },
+  "plugins": [
+    {
+      "name": "md-crm",
+      "source": "./plugins/md-crm",
+      "description": "File-based CRM/ATS on plain Markdown: one file per person, state in frontmatter, a generated board, and guard checks that keep the board honest."
+    }
+  ]
+}
