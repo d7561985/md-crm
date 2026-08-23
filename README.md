@@ -42,12 +42,12 @@ script and templates, and runs the first board. Then:
 The board answers the only questions that matter daily: **whose move is it, how long has
 it been silent, what burns, where exactly does the next message go.**
 
-```
 | | Who | Segment | Stage | Ball | Silence | Next step | Where |
 |---|---|---|---|---|---|---|---|
-| 🔴 | Jane Doe | agency | contacted | ours | 3 d | reply to her question about pricing | [open](…) |
-| · | John Roe | freelancer | found | ours | today | DM: ask what broke first at scale | NO ADDRESS ← guard fails the run
-```
+| 🔴 | Jane Doe | agency | contacted | ours | 3 d | reply to her question about pricing | open ↗ |
+| · | John Roe | freelancer | found | ours | today | DM: ask what broke first at scale | **NO ADDRESS** |
+
+That last cell is a guard at work: a send without an exact address fails the run.
 
 ## What the guards enforce
 
