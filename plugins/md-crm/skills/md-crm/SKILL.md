@@ -30,10 +30,11 @@ Ask the user three things (one message):
 
 1. **CRM or ATS?** For ATS, read `references/ats-preset.md` and use its vocabulary.
 2. **Vocabulary language?** English works as-is. For any other language, translate the
-   values of `STAGES`, `BALLS` and `TALKED` in the CONFIG block — the guards are
-   vocabulary-agnostic, a stage list is configuration, not code. Keep the ORDER: the
-   first stage is "just found/applied" (no touch log required yet), the first ball is
-   "our move", the last ball is "waiting" (no overdue).
+   values of `STAGES`, `BALLS` and `TALKED` in the CONFIG block, plus `BOARD_HEAD`,
+   `SIL_TODAY` and `SIL_UNIT` — the guards are vocabulary-agnostic, a stage list is
+   configuration, not code. Keep the ORDER: the first stage is "just found/applied"
+   (no touch log required yet), the first ball is "our move", the last ball is
+   "waiting" (no overdue).
 3. **Where?** Default `./crm` inside the current project.
 
 Then — **copy the files, never rewrite them from memory**. If you cannot read the

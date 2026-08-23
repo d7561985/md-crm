@@ -66,6 +66,10 @@ const SEND_VERBS = /^\s*(?:[^:\n]{1,24}:\s*)?((?:send|write|reply|answer|comment
 // Body sections the script reads (EN and RU headings both recognized).
 const RE_UNEXPECTED = /##\s*unexpected\s*\n([\s\S]*?)(?=\n##\s|$)/i
 const RE_TOUCHLOG = /##\s*(?:touch log|журнал касаний)\s*\n([\s\S]*?)(?=\n##\s|$)/i
+// Board header and silence labels — translate together with STAGES if you localize.
+const BOARD_HEAD = '| | Who | Segment | Stage | Ball | Silence | Next step | Where |'
+const SIL_TODAY = 'today'
+const SIL_UNIT = 'd' // "3 d"
 // ── END CONFIG ─────────────────────────────────────────────────────────────────────────
 
 /** "h2, h4" → ['h2','h4']. Empty and junk silently dropped, unknown codes returned —
@@ -149,11 +153,11 @@ function load() {
 }
 
 function render(rows) {
-  const head = '| | Who | Segment | Stage | Ball | Silence | Next step | Where |\n|---|---|---|---|---|---|---|---|'
+  const head = `${BOARD_HEAD}\n|---|---|---|---|---|---|---|---|`
   const body = rows.map((r) => {
     const flag = r.overdue ? (r.ball === BALLS[0] ? '🔴' : '🔔') : '·'
     const link = `[${r.name}](./${r.file})`
-    const sil = r.silence == null ? '—' : r.silence === 0 ? 'today' : `${r.silence} d`
+    const sil = r.silence == null ? '—' : r.silence === 0 ? SIL_TODAY : `${r.silence} ${SIL_UNIT}`
     // "Where" is its own column, not a suffix of the step: the address must be visible
     // BEFORE the person starts copying the text. A suffix at the end of a long cell is
     // read last or not at all.
