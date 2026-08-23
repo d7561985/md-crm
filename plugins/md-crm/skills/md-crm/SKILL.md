@@ -4,8 +4,9 @@ description: >-
   a generated board, guard checks that fail the run when data lies. Use when the user
   wants to set up or run contact/lead/candidate tracking in a repo or folder: "set up
   a CRM", "track my leads/candidates", "who should I write this week", "run the board",
-  "log this reply". Also fires in Russian: «заведи CRM», «веди контакты/кандидатов»,
-  «прогони доску», «кому писать на этой неделе», «запиши ответ».
+  "log this reply", "find me leads". Also fires in Russian: «заведи CRM», «веди
+  контакты/кандидатов», «прогони доску», «кому писать на этой неделе», «запиши ответ»,
+  «найди лидов».
 ---
 
 # md-crm — a CRM on Markdown files
@@ -107,6 +108,17 @@ arrives — the user pastes it, you record it **verbatim** with 💬, update `ba
 Every touch = update `last_touch` and `ball`. Wrote to them → ball is theirs. They
 answered → ball is ours. A negative result ("they don't have this pain") is a result —
 it goes into the card, not into the void.
+
+## Finding leads
+
+When the user asks to find leads (LinkedIn or elsewhere), read
+`references/lead-search.md` first and follow its boundary rule strictly: **the human
+opens and scrolls the pages; you triage what the human already sees, capture the two
+addresses (profile + post permalink) and file the cards.** Never automate clicks,
+scrolling or collection on LinkedIn — its User Agreement forbids it, and the origin
+system treated this as non-negotiable. If you are running in a browser side panel
+(e.g. Claude in Chrome), work with the visible page only. Every found card gets
+`found_by: <query-id>` so the query's yield can be measured.
 
 ## The weekly run
 
