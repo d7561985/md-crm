@@ -1,10 +1,11 @@
 ---
-description: File-based CRM or ATS on plain Markdown — one file per person, state in
-  frontmatter, a generated board, guard checks that fail the run when data lies. Use
-  when the user wants to set up or run contact/lead/candidate tracking in a repo or
-  folder: "set up a CRM", "track my leads/candidates", "who should I write this week",
-  "run the board", "log this reply". Also fires in Russian: «заведи CRM», «веди
-  контакты/кандидатов», «прогони доску», «кому писать на этой неделе», «запиши ответ».
+description: >-
+  File-based CRM or ATS on plain Markdown — one file per person, state in frontmatter,
+  a generated board, guard checks that fail the run when data lies. Use when the user
+  wants to set up or run contact/lead/candidate tracking in a repo or folder: "set up
+  a CRM", "track my leads/candidates", "who should I write this week", "run the board",
+  "log this reply". Also fires in Russian: «заведи CRM», «веди контакты/кандидатов»,
+  «прогони доску», «кому писать на этой неделе», «запиши ответ».
 ---
 
 # md-crm — a CRM on Markdown files
@@ -35,7 +36,10 @@ Ask the user three things (one message):
    "our move", the last ball is "waiting" (no overdue).
 3. **Where?** Default `./crm` inside the current project.
 
-Then:
+Then — **copy the files, never rewrite them from memory**. If you cannot read the
+skill's files (sandbox, permissions), STOP and tell the user how to grant access. A
+re-implemented script looks like the real one and silently loses guards — the exact
+failure mode this system exists to prevent.
 
 1. Copy `scripts/board.mjs` and `scripts/board.test.mjs` → `<dir>/`
 2. Copy `templates/board-README.md` → `<dir>/contacts/README.md`
