@@ -66,18 +66,18 @@ That last cell is a guard at work: a send without an exact address fails the run
 
 Every guard is covered by `board.test.mjs` (24 tests, zero dependencies, `node --test`).
 
-## Where this comes from — honest limits
+## Where this comes from
 
 The system this skill generalizes was built in ~27 hours of calendar time (Aug 2026) on
-a live project: 16 contacts, 23 commits, 307 lines of code. Five of its eight guards
-were written as a direct response to a failure that had already happened — the full
-catalog, anonymized, ships with the skill in
-[`references/failures.md`](plugins/md-crm/skills/md-crm/references/failures.md).
+a live project — I built it for myself and use it myself: 16 contacts, 23 commits, 307
+lines of code. Five of its eight guards were written as a direct response to a failure
+that had already happened — the full catalog, anonymized, ships with the skill in
+[`references/failures.md`](plugins/md-crm/skills/md-crm/references/failures.md): it
+seems right that a tool should carry the history of its own accidents with it.
 
-What it has **not** proven: the origin system had sent exactly one message and received
-zero replies when this was written; no contact has reached a deal; "a CRM at three
-contacts" is one case, not a law. This is a skeleton and a discipline, not a silver
-bullet.
+The system is young; thresholds and vocabularies are settings, not laws. The design
+bets on guards rather than promises — every rule that lived as prose got broken, the
+ones with a failing check survived.
 
 Long reads (RU/EN/UA/BY/PL):
 
