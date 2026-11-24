@@ -1,7 +1,7 @@
 {
   "name": "md-crm",
   "description": "CRM on Markdown files: one file per person, generated board, guards that fail the run when data lies. Works as CRM (outreach) or ATS (hiring) — the difference is a stage vocabulary, not architecture.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "Dzmitry Harupa", "url": "https://harupa.pro" },
   "homepage": "https://harupa.pro",
   "license": "MIT"

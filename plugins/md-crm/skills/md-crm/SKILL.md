@@ -54,7 +54,7 @@ failure mode this system exists to prevent.
    Fine to skip — while `HYP` is empty the tally section stays silent.
 6. Run `node <dir>/board.mjs` — expect an empty board and exit 0.
 7. Run `node --test <dir>/board.test.mjs` — expect all tests green. If the user changed
-   the vocabulary, tests still pass: they bring their own fixtures and env.
+   the vocabulary, tests still pass: they bring their own fixtures and paths.
 
 The origin system was started when there were **three** contacts, on the argument
 "without this it will be chaos" — three live threads in three different places and no

@@ -58,8 +58,9 @@ function run(cards, { args = [], log = '', script = SCRIPT } = {}) {
   let out = ''
   let code = 0
   try {
-    out = execFileSync('node', [script, ...args], {
-      env: { ...process.env, CRM_CONTACTS: dir, CRM_LOG: logPath },
+    // Paths go in as flags, before the test's own args, so `--run` with no text stays
+    // last and is still caught. No env is passed on: the script must not need one.
+    out = execFileSync(process.execPath, [script, '--contacts', dir, '--log', logPath, ...args], {
       encoding: 'utf8',
     })
   } catch (e) {
@@ -229,9 +230,8 @@ test('three runs → three intact rows, freshest on top', () => {
   writeFileSync(join(dir, 'ok.md'), CARD_OK)
   const logPath = join(root, 'cycle-log.md')
   writeFileSync(logPath, '# log\n\n<!-- RUNS:START -->\n')
-  const env = { ...process.env, CRM_CONTACTS: dir, CRM_LOG: logPath }
   for (const decision of ['first', 'second', 'third']) {
-    execFileSync('node', [SCRIPT, '--run', decision], { env, encoding: 'utf8' })
+    execFileSync(process.execPath, [SCRIPT, '--contacts', dir, '--log', logPath, '--run', decision], { encoding: 'utf8' })
   }
   const rows = readFileSync(logPath, 'utf8').split('\n').filter((l) => /^\|?\s*\d{4}-\d{2}-\d{2}/.test(l) || /^\| \d{4}/.test(l))
   assert.equal(rows.length, 3, `three runs must yield three rows, got ${rows.length}`)

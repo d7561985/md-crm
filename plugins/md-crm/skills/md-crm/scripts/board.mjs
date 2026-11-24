@@ -6,11 +6,12 @@
 // the cards, and the drift is caught not by eyes but by a failure ("I thought I had
 // written to them"). Source of truth is the card frontmatter; the board is derived.
 //
-// Usage: node board.mjs [--check] [--run "decision text"]
+// Usage: node board.mjs [--check] [--run "decision text"] [--contacts <dir>] [--log <file>]
 //   no flags — prints the board and rewrites the section in contacts/README.md
 //   --check  — print only; exit 1 when anything burns (for a future gate)
 //   --run    — append a cycle-log entry: date and counters come from the script,
 //              the decision text comes from you
+//   --contacts, --log — point at other files (tests use them for fixtures)
 //
 // This file descends from a live system built in Aug 2026 (see the md-crm skill).
 // Logic is a 1:1 port; only the vocabulary below is configuration.
@@ -21,11 +22,19 @@ import { fileURLToPath } from 'node:url'
 
 // Everything lives next to this script: <crm-dir>/board.mjs, <crm-dir>/contacts/*.md,
 // <crm-dir>/contacts/README.md (the board is embedded there), <crm-dir>/cycle-log.md.
-// Env overrides exist so tests can point at fixtures instead of live data.
+// --contacts / --log override the paths so tests can point at fixtures instead of live
+// data. Flags, not environment variables: the script reads nothing from the user's
+// environment.
+/** Value after a flag; a following flag is not a value ("--run --check" has no text). */
+const flag = (name) => {
+  const i = process.argv.indexOf(name)
+  const v = i < 0 ? undefined : process.argv[i + 1]
+  return v == null || v.startsWith('--') ? undefined : v
+}
 const HERE = dirname(fileURLToPath(import.meta.url))
-const DIR = process.env.CRM_CONTACTS || join(HERE, 'contacts')
+const DIR = flag('--contacts') || join(HERE, 'contacts')
 const INDEX = join(DIR, 'README.md')
-const LOG = process.env.CRM_LOG || join(HERE, 'cycle-log.md')
+const LOG = flag('--log') || join(HERE, 'cycle-log.md')
 const START = '<!-- BOARD:START -->'
 const END = '<!-- BOARD:END -->'
 
@@ -252,7 +261,7 @@ if (sinceRun != null && sinceRun < 7) console.log(`  week not over yet (${7 - si
 if (sinceRun != null && sinceRun >= 7) console.log('  → time: a week has passed')
 
 if (runArgIdx >= 0) {
-  const decided = (process.argv[runArgIdx + 1] || '').trim()
+  const decided = (flag('--run') || '').trim()
   if (!decided) { console.error('\n✗ --run needs the decision as text: node board.mjs --run "change: dropped X from query Y"'); process.exit(1) }
   const row = `| ${today} | ${rows.length} | ${rows.filter((r) => r.ball === BALLS[0]).length} | ${talks.length} | ${decided.replace(/\|/g, '/')} |\n`
   const marker = '<!-- RUNS:START -->'
